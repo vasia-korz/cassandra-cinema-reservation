@@ -46,18 +46,15 @@ def insert_reservation(session, movie_id, seat, user):
 
     return False
 
-
-
 def delete_reservation(session, movie_id, user, seat):
-    applied = session.execute("""
+    session.execute("""
         DELETE FROM reservations WHERE movie_id = %s AND seat = %s
     """, (movie_id, seat))
-    if applied:
-        session.execute("""
-            DELETE FROM reservations_by_user WHERE user = %s AND movie_id = %s AND seat = %s
-        """, (user, movie_id, seat))
+    session.execute("""
+        DELETE FROM reservations_by_user WHERE user = %s AND movie_id = %s AND seat = %s
+    """, (user, movie_id, seat))
     
-    return applied
+    return True
 
 def cleanup_test_reservations(session, movie_id, users):
     for seat in SEATS:
